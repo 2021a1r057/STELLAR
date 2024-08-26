@@ -41,29 +41,12 @@ STELLAR is a user-friendly app featuring a responsive design that seamlessly tra
 If you want to run the project locally, you need to make sure you have [Node.js](https://nodejs.org/it) installed on your device. Then, simply clone the repository, install dependencies and start the development server using the line commands listed below.
 
 ```
-git clone https://github.com/dxenia/astrology-app.git
-cd astrology-app
+git clone https://github.com/2021a1r057/STELLAR.git
+cd STELLAR
 npm install
 npm run dev
 ```
 
-## Print Screens
-
-### Light/Dark Mode Comparison
-
-<img src="./src/assets/printscreens/light-mode.png" width=600>
-<img src="./src/assets/printscreens/dark-mode.png" width=600>
-
-### Responsive design
-
-Mobile:<br />
-<img src="./src/assets/printscreens/mobile.png" width=200>
-
-Tablet:<br />
-<img src="./src/assets/printscreens/tablet.png" width=400>
-
-Laptop:<br />
-<img src="./src/assets/printscreens/laptop.png" width=600>
 
 ## Conclusion
 
