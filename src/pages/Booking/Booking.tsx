@@ -81,7 +81,7 @@ function Booking() {
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    const errors: { [key: string]: string } = {};
+    let errors: { [key: string]: string } = {};
     const { name, email, sessionType, date, time } = formData;
 
     if (!name) errors.name = 'Name is required.';
@@ -98,6 +98,15 @@ function Booking() {
     // Simulate a successful booking process
     setShowAlert(true);
     setFormErrors({});
+    
+    // Reset form data
+    setFormData({
+      name: '',
+      email: '',
+      sessionType: '',
+      date: null,
+      time: '',
+    });
   };
 
   const getAvailableTimes = () => {
@@ -265,10 +274,10 @@ function Booking() {
         </Col>
       </Row>
 
-      {/* Success Alert */}
+      {/* Alert for successful submission */}
       {showAlert && (
         <Alert variant="success" onClose={() => setShowAlert(false)} dismissible>
-          Your booking was successful!
+          Your booking has been confirmed!
         </Alert>
       )}
     </Container>
