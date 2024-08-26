@@ -47,23 +47,6 @@ npm install
 npm run dev
 ```
 
-## Print Screens
-
-### Light/Dark Mode Comparison
-
-<img src="./src/assets/printscreens/light-mode.png" width=600>
-<img src="./src/assets/printscreens/dark-mode.png" width=600>
-
-### Responsive design
-
-Mobile:<br />
-<img src="./src/assets/printscreens/mobile.png" width=200>
-
-Tablet:<br />
-<img src="./src/assets/printscreens/tablet.png" width=400>
-
-Laptop:<br />
-<img src="./src/assets/printscreens/laptop.png" width=600>
 
 ## Conclusion
 
