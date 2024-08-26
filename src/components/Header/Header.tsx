@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import ThemeToggle from '../ThemeToggle/ThemeToggle';
+// import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
 import './Header.css';
 
