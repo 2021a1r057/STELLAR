@@ -5,7 +5,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Booking.css';
 
-const availableSlots = {
+// Define available slots and types for the therapy sessions
+interface AvailableSlots {
+  [key: string]: string[];
+}
+
+const availableSlots: AvailableSlots = {
   Monday: ['10 AM', '2 PM', '5 PM'],
   Tuesday: ['10 AM', '2 PM', '5 PM'],
   Wednesday: ['10 AM', '2 PM', '5 PM'],
@@ -15,75 +20,89 @@ const availableSlots = {
 };
 
 const therapyTypes = [
-  { value: 'solo', label: 'Solo Therapy', cost: 4000 },   
-  { value: 'couple', label: 'Couple Therapy', cost: 6400 }, 
-  { value: 'group', label: 'Group Therapy', cost: 2400 },   
+  { value: 'solo', label: 'Solo Therapy', cost: 4000 },
+  { value: 'couple', label: 'Couple Therapy', cost: 6400 },
+  { value: 'group', label: 'Group Therapy', cost: 2400 },
 ];
 
+interface FormData {
+  name: string;
+  email: string;
+  sessionType: string;
+  date: Date | null;
+  time: string;
+}
+
 function Booking() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string>('');
-  const [selectedSessionType, setSelectedSessionType] = useState<string>('');
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     sessionType: '',
     date: null,
     time: '',
   });
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      name: e.target.value,
+    }));
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      email: e.target.value,
+    }));
+  };
+
+  const handleSessionTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      sessionType: e.target.value,
     }));
   };
 
   const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      date: date,
-    }));
-    setSelectedTime('');
-  };
-
-  const handleSessionTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
-    setSelectedSessionType(value);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      sessionType: value,
+      date,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      time: e.target.value,
+    }));
+  };
+
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    setShowAlert(true);
+    const errors: { [key: string]: string } = {};
+    const { name, email, sessionType, date, time } = formData;
 
-    // Auto-reset the form after 5 seconds
-    setTimeout(() => {
-      setShowAlert(false);
-      setFormData({
-        name: '',
-        email: '',
-        sessionType: '',
-        date: null,
-        time: '',
-      });
-      setSelectedDate(null);
-      setSelectedTime('');
-      setSelectedSessionType('');
-    }, 2000);
+    if (!name) errors.name = 'Name is required.';
+    if (!email) errors.email = 'Email is required.';
+    if (!sessionType) errors.sessionType = 'Session type is required.';
+    if (!date) errors.date = 'Date is required.';
+    if (!time) errors.time = 'Time is required.';
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    // Simulate a successful booking process
+    setShowAlert(true);
+    setFormErrors({});
   };
 
   const getAvailableTimes = () => {
-    if (!selectedDate) return [];
-    const day = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+    if (!formData.date) return [];
+    const day = formData.date.toLocaleDateString('en-US', { weekday: 'long' }) as keyof AvailableSlots;
     return availableSlots[day] || [];
   };
 
@@ -93,13 +112,14 @@ function Booking() {
   };
 
   const getTotalCost = () => {
-    return getSessionCost(selectedSessionType);
+    return getSessionCost(formData.sessionType);
   };
 
   return (
     <Container className="booking-container mt-5">
       <h1 className="text-center mb-4">Book a Therapy Session</h1>
       <Row>
+        {/* Booking Form Section */}
         <Col md={6} className="mb-4">
           <Card className="h-100">
             <Card.Body>
@@ -111,10 +131,13 @@ function Booking() {
                     type="text"
                     name="name"
                     value={formData.name}
-                    onChange={handleInputChange}
+                    onChange={handleNameChange}
                     placeholder="Enter your name"
-                    required
+                    isInvalid={!!formErrors.name}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.name}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Email</Form.Label>
@@ -122,10 +145,13 @@ function Booking() {
                     type="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleInputChange}
+                    onChange={handleEmailChange}
                     placeholder="Enter your email"
-                    required
+                    isInvalid={!!formErrors.email}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.email}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Session Type</Form.Label>
@@ -133,7 +159,7 @@ function Booking() {
                     name="sessionType"
                     value={formData.sessionType}
                     onChange={handleSessionTypeChange}
-                    required
+                    isInvalid={!!formErrors.sessionType}
                   >
                     <option value="">Select a session type</option>
                     {therapyTypes.map((type) => (
@@ -142,30 +168,36 @@ function Booking() {
                       </option>
                     ))}
                   </Form.Select>
-                  {selectedSessionType && (
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.sessionType}
+                  </Form.Control.Feedback>
+                  {formData.sessionType && (
                     <Form.Text className="text-muted">
-                      Cost: ₹{getSessionCost(selectedSessionType)}
+                      Cost: ₹{getSessionCost(formData.sessionType)}
                     </Form.Text>
                   )}
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Choose Date</Form.Label>
                   <DatePicker
-                    selected={selectedDate}
+                    selected={formData.date}
                     onChange={handleDateChange}
                     className="form-control"
                     minDate={new Date()}
                     dateFormat="MMMM d, yyyy"
                     required
                   />
+                  {formErrors.date && (
+                    <Form.Text className="text-danger">{formErrors.date}</Form.Text>
+                  )}
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Select Time</Form.Label>
                   <Form.Select
                     name="time"
-                    value={selectedTime}
-                    onChange={(e) => setSelectedTime(e.target.value)}
-                    required
+                    value={formData.time}
+                    onChange={handleTimeChange}
+                    isInvalid={!!formErrors.time}
                   >
                     <option value="">Select a time slot</option>
                     {getAvailableTimes().map((time) => (
@@ -174,7 +206,10 @@ function Booking() {
                       </option>
                     ))}
                   </Form.Select>
-                  {selectedTime && (
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.time}
+                  </Form.Control.Feedback>
+                  {formData.time && (
                     <OverlayTrigger
                       placement="right"
                       overlay={
@@ -200,6 +235,7 @@ function Booking() {
           </Card>
         </Col>
 
+        {/* Available Sessions and Therapy Details */}
         <Col md={6}>
           <Card className="mb-4">
             <Card.Body>
@@ -216,23 +252,25 @@ function Booking() {
 
           <Card className="mb-4">
             <Card.Body>
-              <Card.Title className="text-center">Therapy Sessions We Provide</Card.Title>
+              <Card.Title className="text-center">Therapy Types and Costs</Card.Title>
               <ul className="list-group">
                 {therapyTypes.map((type) => (
                   <li key={type.value} className="list-group-item">
-                    <strong>{type.label}:</strong> ₹{type.cost} - {type.value === 'solo' ? 'Personalized sessions focused on your unique needs.' : type.value === 'couple' ? 'Helping couples navigate their relationship challenges.' : 'Sessions that provide peer support and shared experiences.'}
+                    <strong>{type.label}:</strong> ₹{type.cost}
                   </li>
                 ))}
               </ul>
             </Card.Body>
           </Card>
         </Col>
-        {showAlert && (
+      </Row>
+
+      {/* Success Alert */}
+      {showAlert && (
         <Alert variant="success" onClose={() => setShowAlert(false)} dismissible>
-          Your session has been booked successfully!
+          Your booking was successful!
         </Alert>
       )}
-      </Row>
     </Container>
   );
 }
