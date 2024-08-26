@@ -1,0 +1,16 @@
+.container {
+    max-width: 1200px;
+  }
+  
+  .card {
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-img-top {
+    object-fit: cover;
+    height: 200px;
+  }
