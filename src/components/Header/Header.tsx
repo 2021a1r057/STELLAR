@@ -115,9 +115,9 @@ export default function Header() {
               Book Now
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <ThemeToggle />
-          </li>
+          </li> */}
         </ul>
       </nav>
     </header>
