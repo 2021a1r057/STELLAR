@@ -5,8 +5,8 @@ export const accordionData =[
   },
   {
 {
-  "title": "Author",
-  "content": "Contributors:\n\n1. Aditya Zalpuri - 2021a1r057\n2. Ayush Thakur - 2021a1r049\n3. Ananya Thakur - 2021a1r136\n4. Raghav Sharma - 2021a1r045"
+  "title": "Authors",
+  "content": "Aditya Zalpuri, Ayush Thakur, Ananya Thakur, Raghav Sharma"
 },
   {
     "title": "Technologies",
